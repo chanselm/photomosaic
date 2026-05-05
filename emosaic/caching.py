@@ -1,5 +1,6 @@
 import os
 import glob
+import hashlib
 import six
 
 if six.PY2:
@@ -38,7 +39,7 @@ class EmbeddingsCacheConfig(object):
             self.downsize, self.face_detect_upsample_multiple, self.num_embedding_jitters,
             self.allow_single_face_per_photo
         )
-        return str(hash(hash_tuple))
+        return hashlib.sha256(str(hash_tuple).encode()).hexdigest()[:16]
 
     def list_cache_files(self):
         return glob.glob(os.path.join(self.cache_dir, self.cache_pattern))
@@ -121,7 +122,7 @@ class MosaicCacheConfig(object):
             self.height, self.width, self.nchannels,
             self.detect_faces
         )
-        return str(hash(hash_tuple))
+        return hashlib.sha256(str(hash_tuple).encode()).hexdigest()[:16]
 
     def list_cache_files(self):
         return glob.glob(os.path.join(self.cache_dir, self.cache_pattern))
