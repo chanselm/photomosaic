@@ -2,7 +2,13 @@ import bz2
 import os
 import glob
 
-import dlib
+try:
+    import dlib
+    _DLIB_AVAILABLE = True
+except ImportError:
+    _DLIB_AVAILABLE = False
+    dlib = None
+
 import numpy as np
 import cv2
 import requests
@@ -41,13 +47,19 @@ def extract_dlib_weights(url, savedir='weights'):
     print("Downloaded and unpackaged weights to: %s" % savepath)
     return savepath
 
-WEIGHTS_2_PATH = {
-    'landmarks_5' : extract_dlib_weights(URL_WEIGHTS_5_FACE_LANDMARKS, savedir='weights'),
-    'landmarks_68' : extract_dlib_weights(URL_WEIGHTS_68_FACE_LANDMARKS, savedir='weights'),
-    'face_recognition' : extract_dlib_weights(URL_WEIGHTS_FACE_RECOGNITION, savedir='weights'),
-}
+if _DLIB_AVAILABLE:
+    WEIGHTS_2_PATH = {
+        'landmarks_5' : extract_dlib_weights(URL_WEIGHTS_5_FACE_LANDMARKS, savedir='weights'),
+        'landmarks_68' : extract_dlib_weights(URL_WEIGHTS_68_FACE_LANDMARKS, savedir='weights'),
+        'face_recognition' : extract_dlib_weights(URL_WEIGHTS_FACE_RECOGNITION, savedir='weights'),
+    }
+else:
+    WEIGHTS_2_PATH = {}
 
-from imutils.face_utils.helpers import FACIAL_LANDMARKS_5_IDXS, FACIAL_LANDMARKS_68_IDXS
+if _DLIB_AVAILABLE:
+    from imutils.face_utils.helpers import FACIAL_LANDMARKS_5_IDXS, FACIAL_LANDMARKS_68_IDXS
+else:
+    FACIAL_LANDMARKS_5_IDXS = FACIAL_LANDMARKS_68_IDXS = {}
 
 def get_eye_measurements(dlib_keypoints):
     keypoints_arr = shape_to_np(dlib_keypoints)
