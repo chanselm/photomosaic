@@ -61,8 +61,8 @@ def mosaicify(
                         idx = np.random.choice(I[0], p=weighting)
                 closest_tile = tile_images[idx]
             except Exception:
-                import ipdb; ipdb.set_trace()
-            
+                pass
+
             # write into mosaic
             if random.random() < randomness:
                 # pick a random tile!
@@ -112,5 +112,4 @@ def mosaicify(
 
     except Exception:
         print(traceback.format_exc())
-        import ipdb; ipdb.set_trace()
         return None, None, None
