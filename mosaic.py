@@ -1,4 +1,5 @@
 import os
+import random
 import argparse
 
 import cv2
@@ -38,10 +39,16 @@ parser.add_argument("--opacity", dest='opacity', type=float, default=0.0, help="
 parser.add_argument("--randomness", dest='randomness', type=float, default=0.0, help="Probability to use random tile")
 parser.add_argument("--height-aspect", dest='height_aspect', type=float, default=4.0, help="Height aspect")
 parser.add_argument("--width-aspect", dest='width_aspect', type=float, default=3.0, help="Width aspect")
-parser.add_argument("--vectorization-factor", dest='vectorization_factor', type=float, default=1., 
+parser.add_argument("--vectorization-factor", dest='vectorization_factor', type=float, default=1.,
     help="Downsize the image by this much before vectorizing")
+parser.add_argument("--seed", dest='seed', type=int, default=None,
+    help="Random seed for reproducible best-k tile selection")
 
 args = parser.parse_args()
+
+if args.seed is not None:
+    random.seed(args.seed)
+    np.random.seed(args.seed)
 
 print("=== Creating Mosaic Image ===")
 print("Images=%s, target=%s, scale=%d, aspect_ratio=%.4f, vectorization=%d, randomness=%.2f, faces=%s" % (
